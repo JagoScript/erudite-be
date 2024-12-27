@@ -6,7 +6,7 @@ A lightweight FastAPI-based backend for Erudite AI, text generation using Unslot
 
 ## Project Structure
 ```
-chatgpt-clone/
+erudite-be/
 ├── app/
 │   ├── __init__.py             
 │   ├── main.py                 # Entry point for the FastAPI app
