@@ -1,6 +1,7 @@
+torch -i https://download.pytorch.org/whl/cu118
 fastapi
 uvicorn
-transformers
+transformers 
 torch
 pytest
 accelerate
