@@ -9,7 +9,7 @@ A lightweight FastAPI-based backend for Erudite AI, text generation using Unslot
 erudite-be/
 ├── app/
 │   ├── __init__.py             
-│   ├── main.py                 # Entry point for the FastAPI app
+│   ├── main.py                 # Entry point
 │   ├── api/
 │   │   ├── __init__.py         
 │   │   ├── endpoints.py        # API route definitions
