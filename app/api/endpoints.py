@@ -6,6 +6,5 @@ router = APIRouter()
 
 @router.post("/generate", response_model=TextGenerationResponse)
 async def generate_text_endpoint(request: TextGenerationRequest):
-    response = generate_text(request.prompt)
-    return {"response": response}
- 
+    response = generate_text(request.prompt, instructions=request.instructions, history=request.history)
+    return response
