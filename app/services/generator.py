@@ -35,12 +35,14 @@ def generate_text(prompt: str, max_new_tokens: int = 256, instructions: str = ""
     if response.startswith(formatted_prompt):
         response = response[len(formatted_prompt):].strip()
     
-    # Update the history with the new interaction
+    # Update history with new interaction
     history.append({"role": "user", "content": prompt})
     history.append({"role": "bot", "content": response})
+
+    print("Response:", response)
 
     return {
         "prompt": prompt,
         "response": response,
-        "history": history  # Return the updated history
+        "history": history  # Return updated history
     }
