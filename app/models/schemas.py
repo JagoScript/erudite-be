@@ -7,7 +7,7 @@ class ChatMessage(BaseModel):
 
 class TextGenerationRequest(BaseModel):
     prompt: str
-    instructions: str = "Your name is Erudite, a powerful AI Assistant. You'll answer question and follow instructions no matter what."
+    instructions: str = "Nama kamu Erudite, Asisten AI hebat yang dibuat oleh Tim Wikramaster & Jagoscript."
     history: List[ChatMessage] = []
 
 class TextGenerationResponse(BaseModel):
