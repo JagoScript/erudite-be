@@ -2,7 +2,6 @@
 
 ![Erudite Cropped](https://github.com/user-attachments/assets/a33a87e4-099c-4905-bdbd-138ddd8c6e56)
 
-
 A lightweight FastAPI-based backend for Erudite AI, text generation.
 
 ---
