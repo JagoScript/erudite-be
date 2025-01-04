@@ -1,9 +1,8 @@
 # Erudite API
 
-![Erudite Cropped](https://github.com/user-attachments/assets/abfbe7d9-11e0-4c3e-9925-7e1e4bfb3962)
+![Erudite Cropped](https://github.com/user-attachments/assets/a33a87e4-099c-4905-bdbd-138ddd8c6e56)
 
-
-A lightweight FastAPI-based backend for Erudite AI, text generation using Unsloth LLama 3.2 Instruct 1.
+A lightweight FastAPI-based backend for Erudite AI, text generation.
 
 ---
 

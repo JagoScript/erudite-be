@@ -1,8 +1,8 @@
 import torch
 from app.core.config import settings
 from transformers import pipeline
-from torch.profiler import profile, record_function, ProfilerActivity
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from typing import List, Dict
 
 tokenizer = AutoTokenizer.from_pretrained(settings.MODEL_NAME)
 model = AutoModelForCausalLM.from_pretrained(settings.MODEL_NAME, torch_dtype=torch.bfloat16, trust_remote_code=True)
@@ -11,36 +11,38 @@ model_pipeline = pipeline(
     model=model,
     tokenizer=tokenizer,
     device_map="auto",
-    # load_in_4bit=True,
 )
 
-def generate_text(prompt: str, max_new_tokens: int = 256) -> str:
+def format_prompt(prompt: str, instructions: str = "", history: List[Dict[str, str]] = []) -> str:
+    if instructions:
+        instructions = f"<start_of_turn>system\n{instructions}<end_of_turn>\n"
+    
+    history_str = ""
+    for message in history[-10:]:  # Truncate history to the last 10 messages
+        history_str += f"<start_of_turn>{message['role']}\n{message['content']}<end_of_turn>\n"
+    
+    return f"{instructions}{history_str}<start_of_turn>user\n{prompt}<end_of_turn>\n<start_of_turn>model\n"
+
+def generate_text(prompt: str, max_new_tokens: int = 256, instructions: str = "", history: List[Dict[str, str]] = []) -> Dict[str, str]:
+    formatted_prompt = format_prompt(prompt, instructions, history)
     result = model_pipeline(
-        prompt,
+        formatted_prompt,
         max_new_tokens=max_new_tokens,
-        num_return_sequences=1,
-        temperature=0.7,
-        top_p=0.95,
-        use_cache=True,
-        repetition_penalty=1.2, 
-        do_sample=True,
     )
     response = result[0]["generated_text"]
 
-    # Profiling
-    with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]) as prof:
-        with record_function("model_inference"):
-            model_pipeline(prompt)
-    print(prof.key_averages().table(sort_by="cuda_time_total"))
-
     # Remove prompt from response
-    if response.startswith(prompt):
-        response = response[len(prompt):].strip()
+    if response.startswith(formatted_prompt):
+        response = response[len(formatted_prompt):].strip()
     
-    return response
+    # Update history with new interaction
+    history.append({"role": "user", "content": prompt})
+    history.append({"role": "bot", "content": response})
 
-def truncate_to_last_sentence(response: str) -> str:
-    sentences = response.split('.')
-    if len(sentences) > 1:
-        return sentences[-2] + '.'
-    return response
+    print("Response:", response)
+
+    return {
+        "prompt": prompt,
+        "response": response,
+        "history": history  # Return updated history
+    }
